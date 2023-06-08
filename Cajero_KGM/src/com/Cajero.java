@@ -122,26 +122,29 @@ public class Cajero {
 	
 	public Ticket transferir(String numCuentaOrigen, String numCuentaDestino, double monto) {
 		int origenIndex = 11, destinoIndex = 11;
-		boolean existencia = false;
+		boolean exO = false, exD = false, existencia = false;
 		
 		for (int i = 0; i < database.length; i++) {
 			if(database[i].getNumCuenta().equals(numCuentaOrigen)) {
+//				System.out.println("La cuenta origen existe");
 				origenIndex = i;
-			} else if (database[i].getNumCuenta().equals(numCuentaOrigen)) {
+				exO = true;
+			} else if (database[i].getNumCuenta().equals(numCuentaDestino)) {
+//				System.out.println("La cuenta destino existe");
 				destinoIndex = i;
+				exD = true;
 			}
 			
-			if (database[origenIndex] != null
-					&& database[destinoIndex] != null
-						&& origenIndex != destinoIndex) {
+			if (exO && exD && (origenIndex != destinoIndex)) {
 				existencia = true;
 				break;
 			}
 		}
 		
-		if (existencia) {
-			if (database[destinoIndex].getSaldo() + monto <= database[destinoIndex].getSaldoMax()
-					&& database[origenIndex].getSaldo() - monto >= database[origenIndex].getSaldoMin()) {
+		
+		if (existencia == true) {
+			if ((database[destinoIndex].getSaldo() + monto <= database[destinoIndex].getSaldoMax())
+					&& (database[origenIndex].getSaldo() - monto >= database[origenIndex].getSaldoMin())) {
 				
 				database[origenIndex].setSaldo(database[origenIndex].getSaldo() - monto);
 				database[destinoIndex].setSaldo(database[destinoIndex].getSaldo() + monto);
